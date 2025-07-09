@@ -13,7 +13,7 @@ const Hero = () => {
         className="relative z-10 text-center px-4"
       >
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-serif">
-          Descubre <span className="text-accent">sam andres</span>
+          Descubre <span className="text-accent">Tuchin</span>
         </h1>
 
         <TypewriterTexts 
