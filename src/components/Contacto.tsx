@@ -1,8 +1,49 @@
 import { motion } from 'framer-motion';
 import { FaWhatsapp, FaFacebook, FaInstagram, FaYoutube, FaTiktok, FaPhone, FaEnvelope, FaMapMarkerAlt, FaBars, FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
 
 
 const Contacto = () => {
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+  const [celular, setCelular] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [confirmacion, setConfirmacion] = useState('');
+
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  // 1. Guardar en la base de datos
+  try {
+    const response = await fetch('http://localhost:3001/contacto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nombre,
+        email,
+        celular,
+        mensaje
+      })
+    });
+
+    const result = await response.json();
+    if (result.estado === 'ok') {
+      console.log('✅ Datos guardados');
+
+      // 2. Redirigir a WhatsApp
+      const textoWhatsApp = `Hola soy ${nombre} y ${mensaje}`;
+      const numeroDestino = '573126877265'; // Número de destino con código de país
+      const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(textoWhatsApp)}`;
+      window.open(url, '_blank');
+    } else {
+      console.warn('⚠️ No se guardó:', result.mensaje);
+    }
+  } catch (error) {
+    console.error('❌ Error al guardar:', error);
+  }
+};
   return (
     <section id="contacto" className="py-20 bg-dark">
       <div className="container mx-auto px-4">
@@ -29,41 +70,74 @@ const Contacto = () => {
             className="bg-white rounded-xl shadow-xl p-8"
           >
             <h3 className="text-2xl font-bold text-dark mb-6">Envíanos un mensaje</h3>
-            <form className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-gray-700 mb-2">Nombre completo</label>
-                <input 
-                  type="text" 
-                  id="name" 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Tu nombre"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-gray-700 mb-2">Correo electrónico</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="tu@email.com"
-                />
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-gray-700 mb-2">Mensaje</label>
-                <textarea 
-                  id="message" 
-                  rows={5} 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Cuéntanos sobre tu interés en visitar Tuchín"
-                ></textarea>
-              </div>
-              <button 
-                type="submit" 
-                className="w-full bg-primary hover:bg-secondary text-white py-4 rounded-full font-semibold transition duration-300"
-              >
-                Enviar mensaje
-              </button>
-            </form>
+             <form className="space-y-6" onSubmit={handleSubmit}>
+
+            <div>
+              <label htmlFor="name" className="block text-gray-700 mb-2">Nombre completo</label>
+              <input 
+                type="text" 
+                id="name"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Tu nombre"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-gray-700 mb-2">Correo electrónico</label>
+              <input 
+                type="email" 
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="tu@email.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="celular" className="block text-gray-700 mb-2">Número de celular</label>
+              <input 
+                type="number"
+                id="celular"
+                value={celular}
+                onChange={(e) => setCelular(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="+57 3121234567"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="message" className="block text-gray-700 mb-2">Mensaje</label>
+              <textarea 
+                id="message"
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
+                rows={5}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Cuéntanos sobre tu interés en visitar Tuchín"
+                required
+              ></textarea>
+            </div>
+
+            {confirmacion && (
+              <p className={`text-center font-semibold ${confirmacion.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                {confirmacion}
+              </p>
+            )}
+
+            <button 
+              type="submit" 
+              className="w-full bg-primary hover:bg-secondary text-white py-4 rounded-full font-semibold transition duration-300"
+            >
+              Enviar mensaje
+            </button>
+          </form>
+
           </motion.div>
           
           <motion.div 

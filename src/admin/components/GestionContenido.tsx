@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ContentForm from './ContentForm';
+import FormInicio from './FormInicio';
 
 interface Item {
   id: number;
@@ -28,7 +28,7 @@ const GestionContenido: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <ContentForm onSave={handleSave} initialData={selected || undefined} />
+ 
 
       <div className="bg-white p-4 rounded shadow-md overflow-x-auto">
         <h3 className="text-lg font-bold mb-2">Lista</h3>

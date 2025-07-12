@@ -1,23 +1,34 @@
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const Experiencias = () => {
-  const experiences = [
-    {
-      title: "Taller de Tejeduría",
-      description: "Participa en talleres vivenciales con maestros artesanos del sombrero vueltiao. Aprende las técnicas ancestrales de tejido en caña flecha.",
-      image: "/images/weaving-workshop.jpg"
-    },
-    {
-      title: "Ruta del Sombrero Vueltiao",
-      description: "Recorre los talleres artesanales y conoce el proceso completo de elaboración del símbolo cultural de Colombia, desde la materia prima hasta el producto final.",
-      image: "/images/hat-route.jpg"
-    },
-    {
-      title: "Cerro de Tofeme",
-      description: "Disfruta de una caminata ecológica por este cerro sagrado para la comunidad Zenú, con impresionantes vistas panorámicas de la región.",
-      image: "/images/tofeme-hill.jpg"
-    }
-  ];
+  const [experiences, setExperiences] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/mostrar_experiencias', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const result = await response.json();
+        console.log('🎯 Datos recibidos:', result);
+
+        if (result.estado === 'ok' && Array.isArray(result.datos)) {
+          setExperiences(result.datos);
+        } else {
+          console.warn('⚠️ No se recibieron experiencias válidas');
+        }
+      } catch (error) {
+        console.error('❌ Error al obtener experiencias:', error);
+      }
+    };
+
+    fetchExperiences();
+  }, []);
 
   return (
     <section id="experiencias" className="py-20 bg-light">
@@ -48,17 +59,17 @@ const Experiencias = () => {
             >
               <div className="relative overflow-hidden h-64">
                 <img 
-                  src={exp.image} 
-                  alt={exp.title} 
+                  src={`http://localhost:3001/uploads/${exp.imagen}`} 
+                  alt={exp.titulo} 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 className="text-xl font-bold">{exp.title}</h3>
+                  <h3 className="text-xl font-bold">{exp.titulo}</h3>
                 </div>
               </div>
               <div className="p-6">
-                <p className="text-gray-700 mb-4">{exp.description}</p>
+                <p className="text-gray-700 mb-4">{exp.descripcion}</p>
                 <a href="#" className="text-primary font-semibold hover:text-secondary flex items-center">
                   Reservar experiencia
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">

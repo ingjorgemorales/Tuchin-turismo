@@ -8,6 +8,7 @@ import CulturaManager from './components/CulturaManager';
 import ExperienciasManager from './components/ExperienciasManager';
 import EventosManager from './components/EventosManager';
 import GaleriaManager from './components/GaleriaManager';
+import ProductosManager from './components/ProductosManager';
 
 export default function Dashboard() {
   return (
@@ -22,6 +23,7 @@ export default function Dashboard() {
         <Route path="cultura" element={<CulturaManager />} />
         <Route path="experiencias" element={<ExperienciasManager />} />
         <Route path="eventos" element={<EventosManager />} />
+        <Route path="productos" element={<ProductosManager />} />
         <Route path="galeria" element={<GaleriaManager />} />
       </Routes>
     </AdminLayout>
